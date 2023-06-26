@@ -1,7 +1,16 @@
 package main
 
-import "github.com/ParkChangSun/al-go-rithm/baeksolution"
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
 
 func main() {
-	baeksolution.Solution()
+	reader := bufio.NewReader(os.Stdin)
+	writer := bufio.NewWriter(os.Stdout)
+	defer writer.Flush()
+
+	var n int
+	fmt.Fscanln(reader, &n)
 }

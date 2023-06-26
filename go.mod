@@ -1,3 +1,3 @@
-module github.com/ParkChangSun/al-go-rithm
+module github.com/parkchangsun/al-go-rithm
 
-go 1.15
+go 1.20
