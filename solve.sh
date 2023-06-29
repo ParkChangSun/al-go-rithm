@@ -1,3 +1,3 @@
 mkdir $1
 cp main.go ./$1
-touch ./$1/README.md
+cp TEMPLATE.MD ./$1/README.md
