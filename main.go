@@ -9,11 +9,10 @@ import (
 var n int
 
 func main() {
-	reader := bufio.NewReader(os.Stdin)
-	writer := bufio.NewWriter(os.Stdout)
-	defer writer.Flush()
+	std := bufio.NewReadWriter(bufio.NewReader(os.Stdin), bufio.NewWriter(os.Stdout))
+	defer std.Flush()
 
-	fmt.Fscanln(reader, &n)
+	fmt.Fscanln(std, &n)
 
 	// solution
 }
