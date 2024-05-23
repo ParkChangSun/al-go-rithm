@@ -6,12 +6,12 @@ import (
 	"os"
 )
 
-var n int
+var std *bufio.ReadWriter = bufio.NewReadWriter(bufio.NewReader(os.Stdin), bufio.NewWriter(os.Stdout))
 
 func main() {
-	std := bufio.NewReadWriter(bufio.NewReader(os.Stdin), bufio.NewWriter(os.Stdout))
 	defer std.Flush()
 
+	var n int
 	fmt.Fscanln(std, &n)
 
 	// solution
