@@ -1,3 +1,3 @@
 module github.com/parkchangsun/al-go-rithm
 
-go 1.20
+go 1.24
