@@ -5,8 +5,9 @@ import (
 	"os"
 )
 
+var std = bufio.NewReadWriter(bufio.NewReader(os.Stdin), bufio.NewWriter(os.Stdout))
+
 func main() {
-	std := bufio.NewReadWriter(bufio.NewReader(os.Stdin), bufio.NewWriter(os.Stdout))
 	defer std.Flush()
 
 	// solution
