@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 	"slices"
 )
@@ -13,8 +14,8 @@ type Ticket struct {
 	u, v, c, d int
 }
 
-type Item struct {
-	n, m int
+type State struct {
+	n, m, d int
 }
 
 func main() {
@@ -26,44 +27,56 @@ func main() {
 	for i := 0; i < t; i++ {
 		var n, m, k int
 		fmt.Fscan(std, &n, &m, &k)
-		tickets := make([][]*Ticket, n+1)
-		for i := 0; i <= n; i++ {
-			tickets[i] = make([]*Ticket, n+1)
-		}
+		tickets := map[int][]*Ticket{}
 		for i := 0; i < k; i++ {
 			temp := &Ticket{}
 			fmt.Fscan(std, &temp.u, &temp.v, &temp.c, &temp.d)
-			tickets[temp.u][temp.v] = temp
+			tickets[temp.u] = append(tickets[temp.u], temp)
 		}
 
 		dp := make([][]int, n+1)
 		for i := range dp {
 			dp[i] = make([]int, m+1)
 			for j := range dp[i] {
-				dp[i][j] = m + 1
+				dp[i][j] = math.MaxInt
 			}
 		}
 		dp[1][0] = 0
-		queue := []Item{{1, 0}}
+		queue := []State{{1, 0, 0}}
 
 		for len(queue) > 0 {
 			cur := queue[0]
 			queue = queue[1:]
 
-			for _, v := range tickets[cur.n] {
-				if v == nil || cur.m+v.c > m {
-					continue
-				}
-				if dp[v.v][cur.m+v.c] > dp[cur.n][cur.m]+v.d {
-					dp[v.v][cur.m+v.c] = dp[cur.n][cur.m] + v.d
-					queue = append(queue, Item{v.v, cur.m + v.c})
+			if cur.n == n {
+				continue
+			}
+
+			if cur.d >= dp[n][m] {
+				continue
+			}
+
+			for _, ticket := range tickets[cur.n] {
+				newTime := dp[cur.n][cur.m] + ticket.d
+				newCost := cur.m + ticket.c
+
+				if newCost <= m && dp[ticket.v][newCost] > newTime {
+					for i := newCost; i <= m; i++ {
+						if dp[ticket.v][i] > newTime {
+							dp[ticket.v][i] = newTime
+						} else {
+							break
+						}
+					}
+					queue = append(queue, State{ticket.v, newCost, newTime})
 				}
 			}
+
+			slices.SortFunc(queue, func(a, b State) int { return a.d - b.d })
 		}
-		// fmt.Print(dp[n])
 
 		res := slices.Min(dp[n])
-		if res > m {
+		if res == math.MaxInt {
 			fmt.Fprint(std, "Poor KCM")
 		} else {
 			fmt.Fprint(std, res)
