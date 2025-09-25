@@ -27,11 +27,14 @@ func main() {
 	for i := 0; i < t; i++ {
 		var n, m, k int
 		fmt.Fscan(std, &n, &m, &k)
-		tickets := map[int][]*Ticket{}
+		tickets := map[int][]Ticket{}
 		for i := 0; i < k; i++ {
-			temp := &Ticket{}
+			temp := Ticket{}
 			fmt.Fscan(std, &temp.u, &temp.v, &temp.c, &temp.d)
 			tickets[temp.u] = append(tickets[temp.u], temp)
+		}
+		for _, s := range tickets {
+			slices.SortFunc(s, func(a, b Ticket) int { return a.d - b.d })
 		}
 
 		dp := make([][]int, n+1)
@@ -48,11 +51,7 @@ func main() {
 			cur := queue[0]
 			queue = queue[1:]
 
-			if cur.n == n {
-				continue
-			}
-
-			if cur.d >= dp[n][m] {
+			if cur.n == n || cur.d > dp[n][m] {
 				continue
 			}
 
@@ -68,11 +67,11 @@ func main() {
 							break
 						}
 					}
+
 					queue = append(queue, State{ticket.v, newCost, newTime})
 				}
-			}
 
-			slices.SortFunc(queue, func(a, b State) int { return a.d - b.d })
+			}
 		}
 
 		res := slices.Min(dp[n])
@@ -83,3 +82,16 @@ func main() {
 		}
 	}
 }
+
+// 1
+// 3 100 3
+// 1 2 1 1
+// 2 3 1 1
+// 1 3 3 30
+
+// 1
+// 4 10 4
+// 1 2 5 3
+// 2 3 5 4
+// 3 4 1 5
+// 1 3 10 6
